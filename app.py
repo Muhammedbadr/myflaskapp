@@ -1,15 +1,19 @@
-from crypt import methods
-from distutils.command.config import config
+from asyncio.log import logger
+from datetime import date
 import email
+from distutils.command.config import config
+import errno
+from functools import wraps
 from unicodedata import name
 from unittest import result
-from flask import Flask, render_template, flash, redirect, url_for, session, request, logging
-from data import Articles
-from flask_mysqldb import MySQL
-from wtforms import Form, StringField, TextAreaField, PasswordField, validators
-from passlib.hash import sha256_crypt
-from functools import wraps
 
+from flask import (Flask, flash, logging, redirect, render_template, request,
+                   session, url_for)
+from flask_mysqldb import MySQL
+from passlib.hash import sha256_crypt
+from wtforms import Form, PasswordField, StringField, TextAreaField, validators
+
+from data import Articles
 
 app = Flask(__name__)
 Articles=Articles()
@@ -72,12 +76,35 @@ def register ():
 @app.route('/login',methods=['GET','POST'])
 def login():
     if request.method=='POST':
-        username = request.form{'username'}
+        username = request.form['username']
         password_candidate=request.form['password']
         cur=mysql.connection.cursor()
         result=cur.execute("SELECT * FROM users WHERE username=%s",[username])
         if result > 0:
-            data = 
+            data = cur.ferchone()
+            password = date ['password']
+
+            
+            if sha256_crypt.verify(password_candidate,password):
+                session['logged_in']=True
+                session['username']=username
+
+                flash('you are now logged in ','success')
+                return redirect (url_for('dashboard'))
+            
+            else:
+
+                error='Invalid login'
+                return render_template('login.html',error=error)
+            cur.close()
+
+
+        else:
+            error='Username not found'
+            return render_template('login.html',error=error)
+    
+    
+    
     return render_template('login.html')
 
 
