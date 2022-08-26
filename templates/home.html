@@ -6,6 +6,16 @@
     <div class="jumbotron text-center">
       <h1>MY FlaskApp</h1>
       <P class="lead">jaskfnsjkn jfnasudng dvueiawsnv ka fjkasfajskfjjksa sjakhajksbdg</P>
+      {% if session.logged_in == NULL %}
+        <a href="/register" class="btn btn-primary btn-lg">Register</a>
+        <a href="/login" class="btn btn-success btn-lg ">Login</a>
+      
+        {% endif %}
+        {% if session.logged_in %}
+        <a href="/dashboard" class="btn btn-success btn-lg ">dashboard</a>
+        {% endif %}
+
     </div>
+
    {% endblock %}
 
